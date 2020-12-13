@@ -4,56 +4,56 @@ namespace Algorithm
 {
     public class Finder
     {
-        private readonly List<Thing> _p;
+        private readonly List<Person> _persons;
 
-        public Finder(List<Thing> p)
+        public Finder(List<Person> persons)
         {
-            _p = p;
+            _persons = persons;
         }
 
-        public F Find(FT ft)
+        public SearchResult Find(SearchCriteria searchCriteria)
         {
-            var tr = new List<F>();
+            var tr = new List<SearchResult>();
 
-            for(var i = 0; i < _p.Count - 1; i++)
+            for(var i = 0; i < _persons.Count - 1; i++)
             {
-                for(var j = i + 1; j < _p.Count; j++)
+                for(var j = i + 1; j < _persons.Count; j++)
                 {
-                    var r = new F();
-                    if(_p[i].BirthDate < _p[j].BirthDate)
+                    var r = new SearchResult();
+                    if(_persons[i].BirthDate < _persons[j].BirthDate)
                     {
-                        r.P1 = _p[i];
-                        r.P2 = _p[j];
+                        r.YoungerPerson = _persons[i];
+                        r.OlderPerson = _persons[j];
                     }
                     else
                     {
-                        r.P1 = _p[j];
-                        r.P2 = _p[i];
+                        r.YoungerPerson = _persons[j];
+                        r.OlderPerson = _persons[i];
                     }
-                    r.D = r.P2.BirthDate - r.P1.BirthDate;
+                    r.AgeDifference = r.OlderPerson.BirthDate - r.YoungerPerson.BirthDate;
                     tr.Add(r);
                 }
             }
 
             if(tr.Count < 1)
             {
-                return new F();
+                return new SearchResult();
             }
 
-            F answer = tr[0];
+            SearchResult answer = tr[0];
             foreach(var result in tr)
             {
-                switch(ft)
+                switch(searchCriteria)
                 {
-                    case FT.One:
-                        if(result.D < answer.D)
+                    case SearchCriteria.ClosestByAge:
+                        if(result.AgeDifference < answer.AgeDifference)
                         {
                             answer = result;
                         }
                         break;
 
-                    case FT.Two:
-                        if(result.D > answer.D)
+                    case SearchCriteria.FurthestByAge:
+                        if(result.AgeDifference > answer.AgeDifference)
                         {
                             answer = result;
                         }
