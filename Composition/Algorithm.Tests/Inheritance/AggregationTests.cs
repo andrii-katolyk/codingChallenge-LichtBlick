@@ -1,4 +1,5 @@
-﻿using Algorithm.Inheritance;
+﻿using System.Linq;
+using Algorithm.Inheritance;
 using Xunit;
 
 namespace Algorithm.Tests.Inheritance
@@ -38,20 +39,26 @@ namespace Algorithm.Tests.Inheritance
             Assert.Equal(12, result.Y);
         }
 
-        // Uncomment this test and make it pass reusing as much code as 
-        // possible from other classes that are availalbe in the Inheritance folder
-        //[Fact]
-        //public void HighPassSummingAggregator_Applys_Filter()
-        //{
-        //    var aggregator = new HighPassSummingAggregator(_measurements);
+        //Uncomment this test and make it pass reusing as much code as 
+        //possible from other classes that are availalbe in the Inheritance folder
+        [Fact]
+        public void HighPassSummingAggregator_Applys_Filter()
+        {
+            var measurements = new[]
+            {
+                new Measurement { X = 5, Y = 1 },
+                new Measurement { X = 2, Y = 2 }
+            };
 
-        //    var result = aggregator.Aggregate();
+            var aggregator = new HighPassSummingAggregator(_measurements.Concat(measurements));
 
-        //    Assert.Equal(105, result.X);
-        //    Assert.Equal(15, result.Y);
-        //}
+            var result = aggregator.Aggregate();
 
-        Measurement[] _measurements = new[]
+            Assert.Equal(105, result.X);
+            Assert.Equal(15, result.Y);
+        }
+
+        Measurement[] _measurements =
         {
             new Measurement { X = 5, Y = 10},
             new Measurement { X = 2, Y = 15},
