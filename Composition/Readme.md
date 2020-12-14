@@ -67,12 +67,33 @@ approach (in the Composition folder).
   When you are finished and made all of the tests pass (9 total, you'll start with 6), take
   some time to reflect on the different approaches. 
   
-  Which are the drawbacks and benefits to each?
-  
+  Which are the drawbacks and benefits to each?  
+  Template Method:
+	Pros:
+		- defines the algorithm ones in a base class and avoid code duplication
+		- lets child classes decide how to implement steps in an algorithm
+		- Open/Closed Principle: The base class provides an Algorithm, so it is closed for modification but is open for extension by child classes.
+		- helps to implement Liskov Substitutional Principle(objects of a base class can be replaced with objects of a child classes)
+	Cons:
+		- Method that implements algorithm is pretty far from the context of calling
+		- The Algorithm steps are strictly defined in base class and can't be injected outside
+		- The inheritence make the algorithm safe but from the other hand makes the general solution not so generic(
+			for example in case if we want to call HighPassFilter together with AveragingAggregator, we need to implement new HighPassAveragingAggreagator )
+
+	Compositional Approach:
+		Pros:
+			- very flexible because give possibility to pass through the parameters any kind of algorithm step implementation(the only requirement is to implement the related interface)
+			- steps of algorighm are visible in place of calling(sometimes it's more intuitive)
+			- using wrappers like HighPassSummingAggregator can avoid a need to use Template method with the same flexibility
+			- provide more ways of calling (for example we can make HighPass calculation by using PointsAggregator and also by using our wrapper). And also we can call PointsAggregator with different combination of injected parameters.
+		Cons:
+			- dependencies needs to be injected directly
+
   Which one would you rather build on in the future? 
+	It depends on a problem that needs to be solved.
+	If the goal is to build some library or framework with strict algorithm or events lifecycle and only some of the steps needs to be implemented by clien code, I will choose Template method.
+	Otherwise Compositional approach will give more flexibility.
 
   Which one achieves better "reusability"?
-
-
-
- 
+	In general, Compositional Approach achieve more reusability
+	For example, as mentioned above, in case if we want to call HighPassFilter together with AveragingAggregator, we need to implement new HighPassAveragingAggreagator. But with Compositional approach we can call PointsAggregator with any combination of Filter and Aggregation Strategy.
