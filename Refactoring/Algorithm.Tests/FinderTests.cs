@@ -15,9 +15,9 @@ namespace Algorithm.Test
         public void Returns_Empty_Results_When_Given_Empty_List()
         {
             var persons = new List<Person>();
-            var pairsFinder = new PairsByAgeDifferenceFinder(persons);
+            var pairsFinder = new PairsFinder(persons);
 
-            var result = pairsFinder.FindBy(AgeDifferenceCriteria.Closest);
+            var result = pairsFinder.FindBy(PairingCriteria.ClosestByAge);
 
             Assert.Null(result.YoungerPerson);
             Assert.Null(result.OlderPerson);
@@ -27,9 +27,9 @@ namespace Algorithm.Test
         public void Returns_Empty_Results_When_Given_One_Person()
         {
             var persons = new List<Person> { Sue };
-            var pairsFinder = new PairsByAgeDifferenceFinder(persons);
+            var pairsFinder = new PairsFinder(persons);
 
-            var result = pairsFinder.FindBy(AgeDifferenceCriteria.Closest);
+            var result = pairsFinder.FindBy(PairingCriteria.ClosestByAge);
 
             Assert.Null(result.YoungerPerson);
             Assert.Null(result.OlderPerson);
@@ -39,9 +39,9 @@ namespace Algorithm.Test
         public void Returns_Closest_Two_For_Two_People()
         {
             var persons = new List<Person> { Sue, Greg };
-            var pairsFinder = new PairsByAgeDifferenceFinder(persons);
+            var pairsFinder = new PairsFinder(persons);
 
-            var result = pairsFinder.FindBy(AgeDifferenceCriteria.Closest);
+            var result = pairsFinder.FindBy(PairingCriteria.ClosestByAge);
 
             Assert.Same(Sue, result.YoungerPerson);
             Assert.Same(Greg, result.OlderPerson);
@@ -51,9 +51,9 @@ namespace Algorithm.Test
         public void Returns_Furthest_Two_For_Two_People()
         {
             var persons = new List<Person> { Greg, Mike };
-            var pairsFinder = new PairsByAgeDifferenceFinder(persons);
+            var pairsFinder = new PairsFinder(persons);
 
-            var result = pairsFinder.FindBy(AgeDifferenceCriteria.Furthest);
+            var result = pairsFinder.FindBy(PairingCriteria.FurthestByAge);
 
             Assert.Same(Greg, result.YoungerPerson);
             Assert.Same(Mike, result.OlderPerson);
@@ -63,9 +63,9 @@ namespace Algorithm.Test
         public void Returns_Furthest_Two_For_Four_People()
         {
             var persons = new List<Person> { Greg, Mike, Sarah, Sue };
-            var pairsFinder = new PairsByAgeDifferenceFinder(persons);
+            var pairsFinder = new PairsFinder(persons);
 
-            var result = pairsFinder.FindBy(AgeDifferenceCriteria.Furthest);
+            var result = pairsFinder.FindBy(PairingCriteria.FurthestByAge);
 
             Assert.Same(Sue, result.YoungerPerson);
             Assert.Same(Sarah, result.OlderPerson);
@@ -75,9 +75,9 @@ namespace Algorithm.Test
         public void Returns_Closest_Two_For_Four_People()
         {
             var persons = new List<Person> { Greg, Mike, Sarah, Sue };
-            var pairsFinder = new PairsByAgeDifferenceFinder(persons);
+            var pairsFinder = new PairsFinder(persons);
 
-            var result = pairsFinder.FindBy(AgeDifferenceCriteria.Closest);
+            var result = pairsFinder.FindBy(PairingCriteria.ClosestByAge);
 
             Assert.Same(Sue, result.YoungerPerson);
             Assert.Same(Greg, result.OlderPerson);

@@ -3,23 +3,23 @@ using System.Linq;
 
 namespace Algorithm
 {
-    public class PairsByAgeDifferenceFinder
+    public class PairsFinder
     {
         private readonly List<Person> _persons;
 
-        public PairsByAgeDifferenceFinder(List<Person> persons)
+        public PairsFinder(List<Person> persons)
         {
             _persons = persons;
         }
 
-        public PersonsPairWithAgeDifference FindBy(AgeDifferenceCriteria ageDifferenceCriteria)
+        public PersonsPairWithAgeDifference FindBy(PairingCriteria pairingCriteria)
         {
             var personPairs = GetPersonPairsWithAgeDifference();
 
             var targetPair = new PersonsPairWithAgeDifference();
             if (personPairs.Any())
             {
-                targetPair = FindPairByCriteria(personPairs, ageDifferenceCriteria);
+                targetPair = FindPairByCriteria(personPairs, pairingCriteria);
             }
 
             return targetPair;
@@ -56,11 +56,11 @@ namespace Algorithm
 
         private PersonsPairWithAgeDifference FindPairByCriteria(
             IEnumerable<PersonsPairWithAgeDifference> pairs,
-            AgeDifferenceCriteria criteria)
+            PairingCriteria criteria)
         {
             var sortedPairs = pairs.OrderBy(pp => pp.AgeDifference).ToList();
 
-            var targetPair = criteria == AgeDifferenceCriteria.Closest
+            var targetPair = criteria == PairingCriteria.ClosestByAge
                 ? GetPairClosestByAge(sortedPairs)
                 : GetPairFurthestByAge(sortedPairs);
 
