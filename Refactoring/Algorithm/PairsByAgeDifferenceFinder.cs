@@ -1,47 +1,29 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Algorithm
 {
-    public class Finder
+    public class PairsByAgeDifferenceFinder
     {
         private readonly List<Person> _persons;
 
-        public Finder(List<Person> persons)
+        public PairsByAgeDifferenceFinder(List<Person> persons)
         {
             _persons = persons;
         }
 
-        public PersonsPairWithAgeDifference Find(SearchCriteria searchCriteria)
+        public PersonsPairWithAgeDifference FindBy(AgeDifferenceCriteria ageDifferenceCriteria)
         {
             var personPairs = GetPersonPairsWithAgeDifference();
 
             var targetPair = new PersonsPairWithAgeDifference();
             if (personPairs.Any())
             {
-                targetPair = GetPairByCriteria(personPairs, searchCriteria);
+                targetPair = FindPairByCriteria(personPairs, ageDifferenceCriteria);
             }
 
             return targetPair;
         }
-
-        private PersonsPairWithAgeDifference GetPairByCriteria(
-            IEnumerable<PersonsPairWithAgeDifference> pairs,
-            SearchCriteria criteria)
-        {
-            var sortedPairs = pairs.OrderBy(pp => pp.AgeDifference).ToList();
-
-            var targetPair = criteria == SearchCriteria.ClosestByAge
-                ? GetPairClosestByAge(sortedPairs)
-                : GetPairFurthestByAge(sortedPairs);
-
-            return targetPair;
-        }
-
-        private PersonsPairWithAgeDifference GetPairClosestByAge(IEnumerable<PersonsPairWithAgeDifference> pairs) => pairs.FirstOrDefault();
-
-        private PersonsPairWithAgeDifference GetPairFurthestByAge(IEnumerable<PersonsPairWithAgeDifference> pairs) => pairs.LastOrDefault();
 
         private List<PersonsPairWithAgeDifference> GetPersonPairsWithAgeDifference()
         {
@@ -71,5 +53,22 @@ namespace Algorithm
 
             return personPairs;
         }
+
+        private PersonsPairWithAgeDifference FindPairByCriteria(
+            IEnumerable<PersonsPairWithAgeDifference> pairs,
+            AgeDifferenceCriteria criteria)
+        {
+            var sortedPairs = pairs.OrderBy(pp => pp.AgeDifference).ToList();
+
+            var targetPair = criteria == AgeDifferenceCriteria.Closest
+                ? GetPairClosestByAge(sortedPairs)
+                : GetPairFurthestByAge(sortedPairs);
+
+            return targetPair;
+        }
+
+        private PersonsPairWithAgeDifference GetPairClosestByAge(IEnumerable<PersonsPairWithAgeDifference> pairs) => pairs.FirstOrDefault();
+
+        private PersonsPairWithAgeDifference GetPairFurthestByAge(IEnumerable<PersonsPairWithAgeDifference> pairs) => pairs.LastOrDefault();
     }
 }
