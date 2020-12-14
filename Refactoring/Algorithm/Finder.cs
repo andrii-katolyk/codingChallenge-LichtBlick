@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Algorithm
 {
@@ -11,57 +13,63 @@ namespace Algorithm
             _persons = persons;
         }
 
-        public SearchResult Find(SearchCriteria searchCriteria)
+        public PersonsPairWithAgeDifference Find(SearchCriteria searchCriteria)
         {
-            var tr = new List<SearchResult>();
+            var personPairs = GetPersonPairsWithAgeDifference();
 
-            for(var i = 0; i < _persons.Count - 1; i++)
+            var targetPair = new PersonsPairWithAgeDifference();
+            if (personPairs.Any())
             {
-                for(var j = i + 1; j < _persons.Count; j++)
+                targetPair = GetPairByCriteria(personPairs, searchCriteria);
+            }
+
+            return targetPair;
+        }
+
+        private PersonsPairWithAgeDifference GetPairByCriteria(
+            IEnumerable<PersonsPairWithAgeDifference> pairs,
+            SearchCriteria criteria)
+        {
+            var sortedPairs = pairs.OrderBy(pp => pp.AgeDifference).ToList();
+
+            var targetPair = criteria == SearchCriteria.ClosestByAge
+                ? GetPairClosestByAge(sortedPairs)
+                : GetPairFurthestByAge(sortedPairs);
+
+            return targetPair;
+        }
+
+        private PersonsPairWithAgeDifference GetPairClosestByAge(IEnumerable<PersonsPairWithAgeDifference> pairs) => pairs.FirstOrDefault();
+
+        private PersonsPairWithAgeDifference GetPairFurthestByAge(IEnumerable<PersonsPairWithAgeDifference> pairs) => pairs.LastOrDefault();
+
+        private List<PersonsPairWithAgeDifference> GetPersonPairsWithAgeDifference()
+        {
+            var personPairs = new List<PersonsPairWithAgeDifference>();
+
+            for (var i = 0; i < _persons.Count - 1; i++)
+            {
+                for (var j = i + 1; j < _persons.Count; j++)
                 {
-                    var r = new SearchResult();
-                    if(_persons[i].BirthDate < _persons[j].BirthDate)
+                    var pair = new PersonsPairWithAgeDifference();
+                    if (_persons[i].BirthDate < _persons[j].BirthDate)
                     {
-                        r.YoungerPerson = _persons[i];
-                        r.OlderPerson = _persons[j];
+                        pair.YoungerPerson = _persons[i];
+                        pair.OlderPerson = _persons[j];
                     }
                     else
                     {
-                        r.YoungerPerson = _persons[j];
-                        r.OlderPerson = _persons[i];
+                        pair.YoungerPerson = _persons[j];
+                        pair.OlderPerson = _persons[i];
                     }
-                    r.AgeDifference = r.OlderPerson.BirthDate - r.YoungerPerson.BirthDate;
-                    tr.Add(r);
+
+                    pair.AgeDifference = pair.OlderPerson.BirthDate - pair.YoungerPerson.BirthDate;
+
+                    personPairs.Add(pair);
                 }
             }
 
-            if(tr.Count < 1)
-            {
-                return new SearchResult();
-            }
-
-            SearchResult answer = tr[0];
-            foreach(var result in tr)
-            {
-                switch(searchCriteria)
-                {
-                    case SearchCriteria.ClosestByAge:
-                        if(result.AgeDifference < answer.AgeDifference)
-                        {
-                            answer = result;
-                        }
-                        break;
-
-                    case SearchCriteria.FurthestByAge:
-                        if(result.AgeDifference > answer.AgeDifference)
-                        {
-                            answer = result;
-                        }
-                        break;
-                }
-            }
-
-            return answer;
+            return personPairs;
         }
     }
 }

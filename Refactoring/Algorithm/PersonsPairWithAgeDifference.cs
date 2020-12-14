@@ -2,7 +2,7 @@
 
 namespace Algorithm
 {
-    public class SearchResult
+    public class PersonsPairWithAgeDifference
     {
         public Person YoungerPerson { get; set; }
 
